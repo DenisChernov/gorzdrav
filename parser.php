@@ -242,6 +242,9 @@ class Parser {
     {
         $pattern = "^(\s+| )(.*)";
         $string = mb_ereg_replace($pattern, "\\2", $string, "mu");
+        if (str_starts_with($string, " ")) {
+            $string = substr($string, 1);
+        }
     }
 
     /**
@@ -267,6 +270,21 @@ class Parser {
         foreach ($abbr as $var):
             $string = mb_ereg_replace($var["search"], $var["to"], $string, "mu");
         endforeach;
+    }
+
+    /**
+     * Грязная замена того, что нельзя заменить регуляркой
+     * @param $string
+     * @param array $fromStrings
+     * @param array $toStrings
+     * @return void
+     */
+    public function dirtyHackReplace(string &$string, array $fromStrings, array $toStrings)
+    {
+        for ($index = 0; $index < count($fromStrings); $index++):
+            $string = str_replace($fromStrings[$index], $toStrings[$index], $string);
+        endfor;
+
     }
 }
 
